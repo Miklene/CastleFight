@@ -22,31 +22,6 @@ class AddFightDialogFragment : DialogFragment() {
     private lateinit var viewModel: AddFightViewModel
     private var playerList: List<Player> = listOf()
 
-
-    private fun setPlayerList(_playerList: List<Player>) {
-        var spPlayers: MutableList<String> = mutableListOf()
-        for (player in _playerList)
-            spPlayers.add(player.name)
-        var spWinnerNameAdapter =
-            context?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, spPlayers) }
-        binding.spWinnerName.adapter = spWinnerNameAdapter
-        var spLoserNameAdapter =
-            context?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, spPlayers) }
-        binding.spLoserName.adapter = spLoserNameAdapter
-    }
-
-    private fun setRaceList(_raceList: List<Race>) {
-        var spRaces: MutableList<String> = mutableListOf()
-        for (race in _raceList)
-            spRaces.add(race.name)
-        var spWinnerRaceAdapter =
-            context?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, spRaces) }
-        binding.spWinnerRace.adapter = spWinnerRaceAdapter
-        var spLoserRaceAdapter =
-            context?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, spRaces) }
-        binding.spLoserRace.adapter = spLoserRaceAdapter
-    }
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
         var builder = AlertDialog.Builder(activity, R.style.Theme_AppCompat_Light_Dialog)
@@ -81,5 +56,29 @@ class AddFightDialogFragment : DialogFragment() {
             dialog?.dismiss()
         }
         return builder.create()
+    }
+
+    private fun setPlayerList(_playerList: List<Player>) {
+        var spPlayers: MutableList<String> = mutableListOf()
+        for (player in _playerList)
+            spPlayers.add(player.name)
+        var spWinnerNameAdapter =
+            context?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, spPlayers) }
+        binding.spWinnerName.adapter = spWinnerNameAdapter
+        var spLoserNameAdapter =
+            context?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, spPlayers) }
+        binding.spLoserName.adapter = spLoserNameAdapter
+    }
+
+    private fun setRaceList(_raceList: List<Race>) {
+        var spRaces: MutableList<String> = mutableListOf()
+        for (race in _raceList)
+            spRaces.add(race.name)
+        var spWinnerRaceAdapter =
+            context?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, spRaces) }
+        binding.spWinnerRace.adapter = spWinnerRaceAdapter
+        var spLoserRaceAdapter =
+            context?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, spRaces) }
+        binding.spLoserRace.adapter = spLoserRaceAdapter
     }
 }

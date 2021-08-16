@@ -1,9 +1,13 @@
 package com.miklene.castlefight.fragments
 
+import android.R
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
@@ -38,6 +42,19 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
     private var raceList: List<Race> = listOf()
     private var playerName: String? = null
     private var raceName: String? = null
+    private val sortingVariants = listOf(
+        "имя",
+        "> боев",
+        "< боев",
+        "> побед",
+        "< побед",
+        "> поражений",
+        "< поражений",
+        "> win rate",
+        "< win rate"
+    )
+
+    val statisticsForRecycler: MutableList<Statistics> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -165,6 +182,28 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
             binding.tvStatisticsName.text = "Расы"
         if (playerName != null)
             binding.tvStatisticsName.text = "Игроки"
+        var spWinnerNameAdapter =
+            context?.let { ArrayAdapter(it, R.layout.simple_spinner_item, sortingVariants) }
+        binding.spinnerSortStatisticsBy.adapter = spWinnerNameAdapter
+        binding.spinnerSortStatisticsBy.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                try {
+                    binding.list.adapter = StatisticsRecyclerAdapter(sortStatisticBy(statisticsForRecycler))
+                } catch (e: Exception) {
+                    Log.d("Sort", "No such sorting variant")
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+        }
         if (playerName != null)
             playerVsPlayerStatisticsViewModel.getByOwnerName(playerName!!)
         if (raceName != null)
@@ -221,14 +260,17 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
     }
 
     override fun getByOwnerPlayerNameCallback(playerVsPlayerStatistics: List<PlayerVsPlayerStatistics>) {
-        val statistics: MutableList<Statistics> = mutableListOf()
-        statistics.clear()
+        statisticsForRecycler.clear()
         for (stat in playerVsPlayerStatistics) {
-            val st: Statistics =
+            val st =
                 Statistics(stat.enemyName, stat.fights, stat.wins, stat.loses, stat.winRate)
-            statistics.add(st)
+            statisticsForRecycler.add(st)
         }
-        binding.list.adapter = StatisticsRecyclerAdapter(statistics)
+        try {
+            binding.list.adapter = StatisticsRecyclerAdapter(sortStatisticBy(statisticsForRecycler))
+        } catch (e: Exception) {
+            Log.d("Sort", "No such sorting variant")
+        }
     }
 
     override fun getByRaceNamesCallback(raceVsRaceStatistics: RaceVsRaceStatistics) {
@@ -236,13 +278,31 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
     }
 
     override fun getByOwnerRaceNameCallback(raceVsRaceStatistics: List<RaceVsRaceStatistics>) {
-        val statistics: MutableList<Statistics> = mutableListOf()
-        statistics.clear()
+        statisticsForRecycler.clear()
         for (stat in raceVsRaceStatistics) {
-            val st: Statistics =
+            val st =
                 Statistics(stat.enemyName, stat.fights, stat.wins, stat.loses, stat.winRate)
-            statistics.add(st)
+            statisticsForRecycler.add(st)
         }
-        binding.list.adapter = StatisticsRecyclerAdapter(statistics)
+        try {
+            binding.list.adapter = StatisticsRecyclerAdapter(sortStatisticBy(statisticsForRecycler))
+        } catch (e: Exception) {
+            Log.d("Sort", "No such sorting variant")
+        }
+
     }
+
+    private fun sortStatisticBy(statistics: MutableList<Statistics>) =
+        when (binding.spinnerSortStatisticsBy.selectedItem.toString()) {
+            sortingVariants[0] -> statistics.sortedBy { it.name }
+            sortingVariants[1] -> statistics.sortedByDescending { it.fights }
+            sortingVariants[2] -> statistics.sortedBy { it.fights }
+            sortingVariants[3] -> statistics.sortedByDescending { it.wins }
+            sortingVariants[4] -> statistics.sortedBy { it.wins }
+            sortingVariants[5] -> statistics.sortedByDescending { it.loses }
+            sortingVariants[6] -> statistics.sortedBy { it.loses }
+            sortingVariants[7] -> statistics.sortedByDescending { it.winRate }
+            sortingVariants[8] -> statistics.sortedBy { it.winRate }
+            else -> throw Exception()
+        }
 }
