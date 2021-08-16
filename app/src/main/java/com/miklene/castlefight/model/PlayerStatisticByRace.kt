@@ -6,11 +6,11 @@ import androidx.room.PrimaryKey
 @Entity
 class PlayerStatisticByRace(
     @PrimaryKey
-    private val id:Int,
-    private val playerName: String,
-    private val raceName: String,
-    private val wins: Int,
-    private val loses: Int
+    val id:Int,
+    val playerName: String,
+    val raceName: String,
+    var wins: Int,
+    var loses: Int
 ) {
    val fights: Int
         get() {

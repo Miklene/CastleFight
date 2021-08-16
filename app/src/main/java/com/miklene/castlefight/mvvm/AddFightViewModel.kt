@@ -17,6 +17,7 @@ class AddFightViewModel(@NonNull application: Application) : AndroidViewModel(ap
     private val fightRepository: FightRepository
     private val playerVsPlayerStatisticsRepository: PlayerVsPlayerStatisticsRepository
     private val raceVsRaceStatisticsRepository: RaceVsRaceStatisticsRepository
+    private val playerStatisticsByRaceRepository:PlayerStatisticsByRaceRepository
     private lateinit var playerLiveData: LiveData<List<Player>>
     private lateinit var raceLiveData: LiveData<List<Race>>
 
@@ -26,6 +27,7 @@ class AddFightViewModel(@NonNull application: Application) : AndroidViewModel(ap
         fightRepository = FightRepository(application)
         playerVsPlayerStatisticsRepository = PlayerVsPlayerStatisticsRepository(application)
         raceVsRaceStatisticsRepository = RaceVsRaceStatisticsRepository(application)
+        playerStatisticsByRaceRepository = PlayerStatisticsByRaceRepository(application)
         viewModelScope.launch {
             playerLiveData = playerRepsitory.getAllPlayers()
             raceLiveData = raceRepository.getAllRaces()
@@ -53,6 +55,7 @@ class AddFightViewModel(@NonNull application: Application) : AndroidViewModel(ap
             raceRepository.updateRaceLoses(fight.loserRace, raceLoses)
             updatePlVsPlDatabase(fight.winner, fight.loser)
             updateRaceVsRaceDatabase(fight.winnerRace, fight.loserRace)
+            updatePlayerStatisticsByRace(fight)
         }
     }
 
@@ -92,5 +95,26 @@ class AddFightViewModel(@NonNull application: Application) : AndroidViewModel(ap
        statLoser.loses++
         raceVsRaceStatisticsRepository.updateStatistics(statWinner)
         raceVsRaceStatisticsRepository.updateStatistics(statLoser)
+    }
+
+    private fun updatePlayerStatisticsByRace(fight: Fight){
+        if ( playerStatisticsByRaceRepository.getByPlayerAndRaceNames(fight.winner, fight.winnerRace) == null) {
+            playerStatisticsByRaceRepository.insert(
+                PlayerStatisticByRace(0, fight.winner, fight.winnerRace, 0, 0)
+            )
+        }
+        val pSBRWinner =
+            playerStatisticsByRaceRepository.getByPlayerAndRaceNames(fight.winner, fight.winnerRace)
+        pSBRWinner.wins++
+        playerStatisticsByRaceRepository.updateStatistics(pSBRWinner)
+        if ( playerStatisticsByRaceRepository.getByPlayerAndRaceNames(fight.loser, fight.loserRace) == null) {
+            playerStatisticsByRaceRepository.insert(
+                PlayerStatisticByRace(0, fight.loser, fight.loserRace, 0, 0)
+            )
+        }
+        val pSBRLoser =
+            playerStatisticsByRaceRepository.getByPlayerAndRaceNames(fight.loser, fight.loserRace)
+        pSBRLoser.loses++
+        playerStatisticsByRaceRepository.updateStatistics(pSBRLoser)
     }
 }
