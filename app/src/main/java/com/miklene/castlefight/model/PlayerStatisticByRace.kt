@@ -12,12 +12,12 @@ class PlayerStatisticByRace(
     private val wins: Int,
     private val loses: Int
 ) {
-    private val fights: Int
+   val fights: Int
         get() {
             return wins + loses
         }
 
-    private val winRate: Int
+    val winRate: Int
         get() {
             if (fights != 0)
                 return ((wins.toDouble() / (wins + loses).toDouble()) * 100).toInt()

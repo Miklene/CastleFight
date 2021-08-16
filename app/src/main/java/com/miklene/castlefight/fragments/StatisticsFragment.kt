@@ -42,6 +42,7 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
     private var raceList: List<Race> = listOf()
     private var playerName: String? = null
     private var raceName: String? = null
+    private var playerRace: String? = null
     private val sortingVariants = listOf(
         "имя",
         "> боев",
@@ -62,6 +63,8 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
             playerName = arguments?.getString("PlayerName")!!
         if (arguments != null && requireArguments().containsKey("RaceName"))
             raceName = arguments?.getString("RaceName")!!
+        if (arguments != null && requireArguments().containsKey("PlayerRace"))
+            playerRace = arguments?.getString("PlayerRace")!!
         initViewModels()
     }
 
@@ -208,6 +211,8 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
             playerVsPlayerStatisticsViewModel.getByOwnerName(playerName!!)
         if (raceName != null)
             raceVsRaceStatisticsViewModel.getByOwnerName(raceName!!)
+        /*if(playerRace!=null)
+            playerVsPlayerStatisticsViewModel.*/
         return view
     }
 

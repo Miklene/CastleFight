@@ -39,6 +39,13 @@ class PlayerStatisticsActivity : AppCompatActivity(), PlayerViewModel.PlayerCall
                 supportFragmentManager.beginTransaction()
                     .add(R.id.statisticsFragmentContainerVersusOthers, it).commit()
             }
+            val playerBundle2 = Bundle()
+            playerBundle2.putString("PlayerRace", playerName)
+            StatisticsFragment().let{
+                it.arguments = playerBundle2
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.statisticsFragmentContainerPlayingRaces,it).commit()
+            }
         }
         if (raceName != null) {
             binding.tvStatisticVersusOthers.text = "Статистика боев против рас"
