@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
+    app:startDestination="@id/fightListFragment">
+
+    <fragment
+        android:id="@+id/fightListFragment"
+        android:name="com.miklene.castlefight.fragments.FightListFragment"
+        android:label="FightListFragment" />
+    <fragment
+        android:id="@+id/playerListFragment"
+        android:name="com.miklene.castlefight.fragments.PlayerListFragment"
+        android:label="PlayerListFragment" />
+    <fragment
+        android:id="@+id/raceListFragment"
+        android:name="com.miklene.castlefight.fragments.RaceListFragment"
+        android:label="RaceListFragment" />
+</navigation>

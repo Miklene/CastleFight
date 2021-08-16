@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/ok_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/positive_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/close_button"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spWinnerRace" />
+
+    <Button
+        android:id="@+id/close_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/negative_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ok_button"
+        app:layout_constraintTop_toBottomOf="@+id/spLoserRace" />
+
+    <Spinner
+        android:id="@+id/spWinnerRace"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/spinner_outlined"
+        android:popupBackground="@drawable/spinner_outlined_and_filled"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toStartOf="@+id/spLoserRace"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/spWinnerName" />
+
+    <Spinner
+        android:id="@+id/spLoserRace"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/spWinnerRace"
+        app:layout_constraintTop_toBottomOf="@id/spLoserName"
+        android:background="@drawable/spinner_outlined"
+        android:popupBackground="@drawable/spinner_outlined_and_filled"
+        android:spinnerMode="dropdown"/>
+
+    <Spinner
+        android:id="@+id/spWinnerName"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/spinner_outlined"
+        android:popupBackground="@drawable/spinner_outlined_and_filled"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toStartOf="@+id/spLoserName"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/spLoserName"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/spWinnerName"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/spinner_outlined"
+        android:popupBackground="@drawable/spinner_outlined_and_filled"
+        android:spinnerMode="dropdown"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

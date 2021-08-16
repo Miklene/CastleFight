@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">CastleFight</string>
+
+    <string name="content_description_floating_button">Add fight</string>
+    <string name="positive_button">ADD</string>
+    <string name="negative_button">CLOSE</string>
+
+    <!--Bottom Navigation menu items-->
+    <string name="fights">Бои</string>
+    <string name="players">Игроки</string>
+    <string name="races">Расы</string>
+
+    <string name="name">Имя</string>
+    <string name="wins">Победы</string>
+    <string name="loses">Поражения</string>
+
+    <string name="add_fight">Добавить бой</string>
+
+    <string name="winner">Победитель</string>
+    <string name="loser">Проигравший</string>
+
+    <string name="stat_againts_players">Статистика боев по игрокам</string>
+    <string name="fight_num">Боев</string>
+    <string name="wins_num">W</string>
+    <string name="loses_num">L</string>
+    <string name="win_rate">WR</string>
+
+    <string name="stat_playing_races">Статистика боев за расы</string>
+</resources>

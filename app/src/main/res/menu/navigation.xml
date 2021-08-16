@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_races"
+        android:icon="@drawable/ic_hord"
+        android:title="@string/races" />
+
+    <item
+        android:id="@+id/navigation_fights"
+        android:icon="@drawable/ic_swords"
+        android:title="@string/fights" />
+
+    <item
+        android:id="@+id/navigation_players"
+        android:icon="@drawable/ic_baseline_people_24"
+        android:title="@string/players" />
+</menu>
