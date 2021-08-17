@@ -1,6 +1,7 @@
 package com.miklene.castlefight.fragments
 
 import android.R
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,18 +10,13 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.miklene.castlefight.databinding.FragmentPlayerListBinding
+import com.miklene.castlefight.activity.PlayerStatisticsActivity
 import com.miklene.castlefight.databinding.FragmentStatisticsBinding
 import com.miklene.castlefight.model.*
 import com.miklene.castlefight.mvvm.*
-import com.miklene.castlefight.recycler_view.FightRecyclerAdapter
-import com.miklene.castlefight.recycler_view.PlayerRecyclerAdapter
 import com.miklene.castlefight.recycler_view.StatisticsRecyclerAdapter
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import kotlin.math.E
@@ -28,7 +24,8 @@ import kotlin.math.E
 class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
     PlayerVsPlayerStatisticsViewModel.PlayerVsPlayerStatisticsCallback,
     RaceVsRaceStatisticsViewModel.RaceVsRaceStatisticsCallback,
-    PlayerStatisticsByRaceViewModel.PlayerStatisticsByRaceCallback {
+    PlayerStatisticsByRaceViewModel.PlayerStatisticsByRaceCallback,
+    StatisticsRecyclerAdapter.OnStatisticsItemClickListener {
     private lateinit var binding: FragmentStatisticsBinding
     private lateinit var playerViewModel: PlayerViewModel
     private lateinit var fightViewModel: FightViewModel
@@ -111,10 +108,10 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
 
     }
 
-    fun setStatList(_statList: List<Statistics>) {
+  /*  fun setStatList(_statList: List<Statistics>) {
         stat = _statList.toMutableList()
-        binding.list.adapter = StatisticsRecyclerAdapter(stat)
-    }
+        binding.list.adapter = StatisticsRecyclerAdapter(stat,this)
+    }*/
 
     private fun setFightList(_fightList: List<Fight>) {
         fightList = _fightList
@@ -220,7 +217,7 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
             ) {
                 try {
                     binding.list.adapter =
-                        StatisticsRecyclerAdapter(sortStatisticBy(statisticsForRecycler))
+                        StatisticsRecyclerAdapter(sortStatisticBy(statisticsForRecycler), this@StatisticsFragment)
                 } catch (e: Exception) {
                     Log.d("Sort", "No such sorting variant")
                 }
@@ -248,7 +245,7 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
         if (fights != 0)
             winRate = ((wins.size.toDouble() / fights.toDouble()) * 100).toInt()
         stat.add(Statistics(loserName, fights, wins.size, loses.size, winRate))
-        binding.list.adapter = StatisticsRecyclerAdapter(stat)
+        binding.list.adapter = StatisticsRecyclerAdapter(stat, this)
     }
 
     override suspend fun updateRaceWinStat(
@@ -261,7 +258,7 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
         if (fights != 0)
             winRate = ((wins.size.toDouble() / fights.toDouble()) * 100).toInt()
         stat.add(Statistics(loserName, fights, wins.size, loses.size, winRate))
-        binding.list.adapter = StatisticsRecyclerAdapter(stat)
+        binding.list.adapter = StatisticsRecyclerAdapter(stat,this)
     }
 
     override suspend fun updatePlayersRaceStat(
@@ -274,7 +271,7 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
         if (fights != 0)
             winRate = ((wins.size.toDouble() / fights.toDouble()) * 100).toInt()
         secondStat.add(Statistics(raceName, fights, wins.size, loses.size, winRate))
-        binding.list.adapter = StatisticsRecyclerAdapter(secondStat)
+        binding.list.adapter = StatisticsRecyclerAdapter(secondStat, this)
     }
 
     override fun getByPlayersNamesCallback(playerVsPlayerStatistics: PlayerVsPlayerStatistics) {
@@ -289,7 +286,7 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
             statisticsForRecycler.add(st)
         }
         try {
-            binding.list.adapter = StatisticsRecyclerAdapter(sortStatisticBy(statisticsForRecycler))
+            binding.list.adapter = StatisticsRecyclerAdapter(sortStatisticBy(statisticsForRecycler), this)
         } catch (e: Exception) {
             Log.d("Sort", "No such sorting variant")
         }
@@ -309,7 +306,7 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
             }
         }
         try {
-            binding.list.adapter = StatisticsRecyclerAdapter(sortStatisticBy(statisticsForRecycler))
+            binding.list.adapter = StatisticsRecyclerAdapter(sortStatisticBy(statisticsForRecycler), this)
         } catch (e: Exception) {
             Log.d("Sort", "No such sorting variant")
         }
@@ -328,7 +325,7 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
             statisticsForRecycler.add(st)
         }
         try {
-            binding.list.adapter = StatisticsRecyclerAdapter(sortStatisticBy(statisticsForRecycler))
+            binding.list.adapter = StatisticsRecyclerAdapter(sortStatisticBy(statisticsForRecycler), this)
         } catch (e: Exception) {
             Log.d("Sort", "No such sorting variant")
         }
@@ -342,7 +339,7 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
             statisticsForRecycler.add(st)
         }
         try {
-            binding.list.adapter = StatisticsRecyclerAdapter(sortStatisticBy(statisticsForRecycler))
+            binding.list.adapter = StatisticsRecyclerAdapter(sortStatisticBy(statisticsForRecycler), this)
         } catch (e: Exception) {
             Log.d("Sort", "No such sorting variant")
         }
@@ -361,4 +358,27 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
             sortingVariants[8] -> statistics.sortedBy { it.winRate }
             else -> throw Exception()
         }
+
+    override fun onStatisticsItemClick(statistics: Statistics) {
+        if (playerName != null) {
+            val intent = Intent(activity, PlayerStatisticsActivity::class.java)
+            intent.putExtra("PlayerName", statistics.name)
+            startActivity(intent)
+        }
+        if (raceName != null) {
+            val intent = Intent(activity, PlayerStatisticsActivity::class.java)
+            intent.putExtra("RaceName", statistics.name)
+            startActivity(intent)
+        }
+        if (playerRace != null) {
+            val intent = Intent(activity, PlayerStatisticsActivity::class.java)
+            intent.putExtra("RaceName", statistics.name)
+            startActivity(intent)
+        }
+        if (racePlayer != null) {
+            val intent = Intent(activity, PlayerStatisticsActivity::class.java)
+            intent.putExtra("PlayerName", statistics.name)
+            startActivity(intent)
+        }
+    }
 }

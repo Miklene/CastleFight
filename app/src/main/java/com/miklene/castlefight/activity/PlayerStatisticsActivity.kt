@@ -39,7 +39,7 @@ class PlayerStatisticsActivity : AppCompatActivity(), PlayerViewModel.PlayerCall
                 supportFragmentManager.beginTransaction()
                     .add(R.id.statisticsFragmentContainerVersusOthers, it).commit()
             }
-            binding.tvStatisticRacePlaying.text = "Статитсика рас"
+            binding.tvStatisticRacePlaying.text = "Статистика рас"
             val playerBundle2 = Bundle()
             playerBundle2.putString("PlayerRace", playerName)
             StatisticsFragment().let{
@@ -60,7 +60,7 @@ class PlayerStatisticsActivity : AppCompatActivity(), PlayerViewModel.PlayerCall
                 supportFragmentManager.beginTransaction()
                     .add(R.id.statisticsFragmentContainerVersusOthers, it).commit()
             }
-            binding.tvStatisticRacePlaying.text = "Статитсика игроков"
+            binding.tvStatisticRacePlaying.text = "Статистика игроков"
             val raceBundle2= Bundle()
             raceBundle2.putString("RacePlayer", raceName)
             StatisticsFragment().let {
