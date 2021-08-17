@@ -11,12 +11,12 @@ import com.miklene.castlefight.model.Statistics
 
 class StatisticsRecyclerAdapter(
     private val stat: List<Statistics>,
-    /*private val onPlayerClickListener: OnPlayerClickListener*/
+    private val onStatisticsItemClickListener: OnStatisticsItemClickListener
 ) :
     RecyclerView.Adapter<StatisticsRecyclerAdapter.MyViewHolder>() {
 
-    interface OnPlayerClickListener {
-        fun onPlayerClick(player: Player)
+    interface OnStatisticsItemClickListener {
+        fun onStatisticsItemClick(statistics: Statistics)
     }
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -34,14 +34,17 @@ class StatisticsRecyclerAdapter(
             tvPlayerWinRate = itemView.findViewById(R.id.tvStatisticsWinRateItem)
         }
 
-        fun bind(stat: Statistics/*, clickListener: OnPlayerClickListener*/) {
+        fun bind(stat: Statistics, clickListener: OnStatisticsItemClickListener) {
             tvPlayerName?.text = stat.name
             tvPlayerFights?.text = stat.fights.toString()
             tvPlayerWins?.text = stat.wins.toString()
             tvPlayerLoses?.text = stat.loses.toString()
             val winRate = stat.winRate
-            val strWinRate =  "$winRate%"
+            val strWinRate = "$winRate%"
             tvPlayerWinRate?.text = strWinRate
+            itemView.setOnClickListener {
+                clickListener.onStatisticsItemClick(stat)
+            }
         }
 
     }
@@ -54,7 +57,7 @@ class StatisticsRecyclerAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val st = stat[position]
-        holder.bind(st)//, onPlayerClickListener)
+        holder.bind(st, onStatisticsItemClickListener)
     }
 
     override fun getItemCount() = stat.size

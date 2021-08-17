@@ -1,12 +1,9 @@
 package com.miklene.castlefight.repositories
 
 import android.app.Application
-import com.miklene.castlefight.model.PlayerStatisticByRace
-import com.miklene.castlefight.model.PlayerVsPlayerStatistics
+import com.miklene.castlefight.model.PlayerStatisticsByRace
 import com.miklene.castlefight.room.statistics.PlayerStatisticsByRaceDao
 import com.miklene.castlefight.room.statistics.PlayerStatisticsByRaceDatabase
-import com.miklene.castlefight.room.statistics.PlayerVsPlayerStatisticsDao
-import com.miklene.castlefight.room.statistics.PlayerVsPlayerStatisticsDatabase
 
 class PlayerStatisticsByRaceRepository(val application: Application) {
     private val playerStatisticsByRaceDao: PlayerStatisticsByRaceDao
@@ -17,16 +14,23 @@ class PlayerStatisticsByRaceRepository(val application: Application) {
         playerStatisticsByRaceDao = playerStatisticsByRaceDatabase.playerStatisticsByRaceDao()
     }
 
-    fun insert(playerStatisticByRace: PlayerStatisticByRace) {
-        playerStatisticsByRaceDao.insert(playerStatisticByRace)
+    fun insert(playerStatisticsByRace: PlayerStatisticsByRace) {
+        playerStatisticsByRaceDao.insert(playerStatisticsByRace)
     }
 
-    fun getByPlayerAndRaceNames(playerName: String, raceName: String): PlayerStatisticByRace {
+    fun getByPlayerAndRaceNames(playerName: String, raceName: String): PlayerStatisticsByRace {
         return playerStatisticsByRaceDao.getByPlayerAndRaceNames(playerName, raceName)
     }
 
-    fun updateStatistics(playerStatisticByRace: PlayerStatisticByRace) {
-        playerStatisticsByRaceDao.updateStatistics(playerStatisticByRace)
+    fun updateStatistics(playerStatisticsByRace: PlayerStatisticsByRace) {
+        playerStatisticsByRaceDao.updateStatistics(playerStatisticsByRace)
     }
 
+    fun getByPlayerName(playerName: String): List<PlayerStatisticsByRace> {
+        return playerStatisticsByRaceDao.getByPlayerName(playerName)
+    }
+
+    fun getByRaceName(raceName: String): List<PlayerStatisticsByRace>{
+        return playerStatisticsByRaceDao.getByRaceName(raceName)
+    }
 }

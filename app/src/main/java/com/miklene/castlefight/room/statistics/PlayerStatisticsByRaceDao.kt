@@ -4,18 +4,23 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.miklene.castlefight.model.PlayerStatisticByRace
-import com.miklene.castlefight.model.PlayerVsPlayerStatistics
+import com.miklene.castlefight.model.PlayerStatisticsByRace
 
 @Dao
 interface PlayerStatisticsByRaceDao {
 
     @Insert
-    fun insert(playerStatisticByRace: PlayerStatisticByRace)
+    fun insert(playerStatisticsByRace: PlayerStatisticsByRace)
 
-    @Query("SELECT * FROM playerstatisticbyrace WHERE playerName == :playerName AND raceName==:raceName")
-    fun getByPlayerAndRaceNames(playerName: String, raceName: String): PlayerStatisticByRace
+    @Query("SELECT * FROM playerstatisticsbyrace WHERE playerName == :playerName AND raceName==:raceName")
+    fun getByPlayerAndRaceNames(playerName: String, raceName: String): PlayerStatisticsByRace
 
     @Update
-    fun updateStatistics(playerStatisticByRace: PlayerStatisticByRace)
+    fun updateStatistics(playerStatisticsByRace: PlayerStatisticsByRace)
+
+    @Query("SELECT * FROM playerstatisticsbyrace WHERE playerName = :playerName")
+    fun getByPlayerName(playerName: String): List<PlayerStatisticsByRace>
+
+    @Query("SELECT * FROM playerstatisticsbyrace WHERE raceName = :raceName")
+    fun getByRaceName(raceName: String): List<PlayerStatisticsByRace>
 }

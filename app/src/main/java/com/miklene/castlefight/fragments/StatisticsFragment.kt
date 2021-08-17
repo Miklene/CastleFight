@@ -27,13 +27,15 @@ import kotlin.math.E
 
 class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
     PlayerVsPlayerStatisticsViewModel.PlayerVsPlayerStatisticsCallback,
-    RaceVsRaceStatisticsViewModel.RaceVsRaceStatisticsCallback {
+    RaceVsRaceStatisticsViewModel.RaceVsRaceStatisticsCallback,
+    PlayerStatisticsByRaceViewModel.PlayerStatisticsByRaceCallback {
     private lateinit var binding: FragmentStatisticsBinding
     private lateinit var playerViewModel: PlayerViewModel
     private lateinit var fightViewModel: FightViewModel
     private lateinit var raceViewModel: RaceViewModel
     private lateinit var playerVsPlayerStatisticsViewModel: PlayerVsPlayerStatisticsViewModel
     private lateinit var raceVsRaceStatisticsViewModel: RaceVsRaceStatisticsViewModel
+    private lateinit var playerStatisticsByRaceViewModel: PlayerStatisticsByRaceViewModel
     private var stat: MutableList<Statistics> = mutableListOf()
     private var secondStat: MutableList<Statistics> = mutableListOf()
     private var isSecondStat: Boolean = false
@@ -43,6 +45,7 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
     private var playerName: String? = null
     private var raceName: String? = null
     private var playerRace: String? = null
+    private var racePlayer: String? = null
     private val sortingVariants = listOf(
         "имя",
         "> боев",
@@ -65,6 +68,8 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
             raceName = arguments?.getString("RaceName")!!
         if (arguments != null && requireArguments().containsKey("PlayerRace"))
             playerRace = arguments?.getString("PlayerRace")!!
+        if (arguments != null && requireArguments().containsKey("RacePlayer"))
+            racePlayer = arguments?.getString("RacePlayer")!!
         initViewModels()
     }
 
@@ -83,6 +88,9 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
         raceVsRaceStatisticsViewModel = activity?.run {
             ViewModelProviders.of(this)[RaceVsRaceStatisticsViewModel::class.java]
         } ?: throw  Exception("Invalid Activity")
+        playerStatisticsByRaceViewModel = activity?.run {
+            ViewModelProviders.of(this)[PlayerStatisticsByRaceViewModel::class.java]
+        } ?: throw Exception("Invalid Activity")
         /* playerViewModel = activity?.run {
              ViewModelProviders.of(this)[PlayerViewModel::class.java]
          } ?: throw Exception("Invalid Activity")
@@ -179,14 +187,28 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
         val view = binding.root
         binding.list.layoutManager = LinearLayoutManager(activity)
         fightViewModel.attachPlayerCallBack(this)
-        playerVsPlayerStatisticsViewModel.attachCallback(this)
-        raceVsRaceStatisticsViewModel.attachCallback(this)
         if (raceName != null)
             binding.tvStatisticsName.text = "Расы"
         if (playerName != null)
             binding.tvStatisticsName.text = "Игроки"
         var spWinnerNameAdapter =
             context?.let { ArrayAdapter(it, R.layout.simple_spinner_item, sortingVariants) }
+        if (playerName != null) {
+            playerVsPlayerStatisticsViewModel.attachCallback(this)
+            playerVsPlayerStatisticsViewModel.getByOwnerName(playerName!!)
+        }
+        if (raceName != null) {
+            raceVsRaceStatisticsViewModel.attachCallback(this)
+            raceVsRaceStatisticsViewModel.getByOwnerName(raceName!!)
+        }
+        if (playerRace != null) {
+            playerStatisticsByRaceViewModel.attachCallback(this)
+            playerStatisticsByRaceViewModel.getByPlayerName(playerRace!!)
+        }
+        if (racePlayer != null) {
+            playerStatisticsByRaceViewModel.attachCallback(this)
+            playerStatisticsByRaceViewModel.getByRaceName(racePlayer!!)
+        }
         binding.spinnerSortStatisticsBy.adapter = spWinnerNameAdapter
         binding.spinnerSortStatisticsBy.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
@@ -197,7 +219,8 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
                 id: Long
             ) {
                 try {
-                    binding.list.adapter = StatisticsRecyclerAdapter(sortStatisticBy(statisticsForRecycler))
+                    binding.list.adapter =
+                        StatisticsRecyclerAdapter(sortStatisticBy(statisticsForRecycler))
                 } catch (e: Exception) {
                     Log.d("Sort", "No such sorting variant")
                 }
@@ -207,12 +230,6 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
 
             }
         }
-        if (playerName != null)
-            playerVsPlayerStatisticsViewModel.getByOwnerName(playerName!!)
-        if (raceName != null)
-            raceVsRaceStatisticsViewModel.getByOwnerName(raceName!!)
-        /*if(playerRace!=null)
-            playerVsPlayerStatisticsViewModel.*/
         return view
     }
 
@@ -285,9 +302,11 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
     override fun getByOwnerRaceNameCallback(raceVsRaceStatistics: List<RaceVsRaceStatistics>) {
         statisticsForRecycler.clear()
         for (stat in raceVsRaceStatistics) {
-            val st =
-                Statistics(stat.enemyName, stat.fights, stat.wins, stat.loses, stat.winRate)
-            statisticsForRecycler.add(st)
+            if (stat.enemyName != raceName) {
+                val st =
+                    Statistics(stat.enemyName, stat.fights, stat.wins, stat.loses, stat.winRate)
+                statisticsForRecycler.add(st)
+            }
         }
         try {
             binding.list.adapter = StatisticsRecyclerAdapter(sortStatisticBy(statisticsForRecycler))
@@ -295,6 +314,38 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
             Log.d("Sort", "No such sorting variant")
         }
 
+    }
+
+    override fun getByPlayerAndRaceNamesCallback(playerStatisticsByRace: PlayerStatisticsByRace) {
+
+    }
+
+    override fun getByPlayerNameCallback(playerStatisticsByRace: List<PlayerStatisticsByRace>) {
+        statisticsForRecycler.clear()
+        for (stat in playerStatisticsByRace) {
+            val st =
+                Statistics(stat.raceName, stat.fights, stat.wins, stat.loses, stat.winRate)
+            statisticsForRecycler.add(st)
+        }
+        try {
+            binding.list.adapter = StatisticsRecyclerAdapter(sortStatisticBy(statisticsForRecycler))
+        } catch (e: Exception) {
+            Log.d("Sort", "No such sorting variant")
+        }
+    }
+
+    override fun getByRaceNameCallback(playerStatisticsByRace: List<PlayerStatisticsByRace>) {
+        statisticsForRecycler.clear()
+        for (stat in playerStatisticsByRace) {
+            val st =
+                Statistics(stat.playerName, stat.fights, stat.wins, stat.loses, stat.winRate)
+            statisticsForRecycler.add(st)
+        }
+        try {
+            binding.list.adapter = StatisticsRecyclerAdapter(sortStatisticBy(statisticsForRecycler))
+        } catch (e: Exception) {
+            Log.d("Sort", "No such sorting variant")
+        }
     }
 
     private fun sortStatisticBy(statistics: MutableList<Statistics>) =

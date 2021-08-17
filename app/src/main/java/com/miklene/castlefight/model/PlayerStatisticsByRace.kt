@@ -4,8 +4,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-class PlayerStatisticByRace(
-    @PrimaryKey
+class PlayerStatisticsByRace(
+    @PrimaryKey(autoGenerate = true)
     val id:Int,
     val playerName: String,
     val raceName: String,
