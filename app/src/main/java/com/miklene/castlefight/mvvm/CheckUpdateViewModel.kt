@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import androidx.annotation.NonNull
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.miklene.castlefight.model.Fight
 import com.miklene.castlefight.repositories.VersionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -2,7 +2,6 @@ package com.miklene.castlefight.fragments
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.ArrayAdapter
@@ -11,7 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.miklene.castlefight.R
 import com.miklene.castlefight.databinding.DialogFragmentAddFightBinding
-import com.miklene.castlefight.model.Fight
+import com.miklene.castlefight.model.Round
 import com.miklene.castlefight.model.Player
 import com.miklene.castlefight.model.Race
 import com.miklene.castlefight.mvvm.AddFightViewModel
@@ -44,7 +43,7 @@ class AddFightDialogFragment : DialogFragment() {
             }
         })
         binding.okButton.setOnClickListener {
-            val fight = Fight(
+            val fight = Round(
                 0,
                 binding.spWinnerName.selectedItem.toString(),
                 binding.spLoserName.selectedItem.toString(),

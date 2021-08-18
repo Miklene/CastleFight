@@ -2,7 +2,6 @@ package com.miklene.castlefight.fragments
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.ProgressBar
@@ -10,10 +9,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProviders
 import com.miklene.castlefight.R
 import com.miklene.castlefight.databinding.DialogFragmentCheckUpdateBinding
-import com.miklene.castlefight.model.Fight
+import com.miklene.castlefight.model.Round
 import com.miklene.castlefight.mvvm.AddFightViewModel
-import com.miklene.castlefight.mvvm.CheckUpdateViewModel
-import com.miklene.castlefight.mvvm.FightViewModel
+import com.miklene.castlefight.mvvm.RoundViewModel
 import com.miklene.castlefight.mvvm.UpdateDatabaseViewModel
 import java.lang.Exception
 
@@ -21,7 +19,7 @@ class CheckUpdateDialogFragment : DialogFragment(), UpdateDatabaseViewModel.Data
     private lateinit var binding: DialogFragmentCheckUpdateBinding
     private lateinit var viewModel: AddFightViewModel
     private lateinit var updateDatabaseViewModel: UpdateDatabaseViewModel
-    private lateinit var fightViewModel: FightViewModel
+    private lateinit var roundViewModel: RoundViewModel
 
     override fun onStart() {
         super.onStart()
@@ -45,16 +43,16 @@ class CheckUpdateDialogFragment : DialogFragment(), UpdateDatabaseViewModel.Data
             ViewModelProviders.of(this)[UpdateDatabaseViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
         updateDatabaseViewModel.attachCallback(this)
-        fightViewModel = activity?.run {
-            ViewModelProviders.of(this)[FightViewModel::class.java]
+        roundViewModel = activity?.run {
+            ViewModelProviders.of(this)[RoundViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
         binding.checkUpdateProgressBar.visibility = ProgressBar.VISIBLE
         return builder.create()
     }
 
-    override fun databaseLoadingComplete(fights: MutableList<Fight>) {
+    override fun databaseLoadingComplete(rounds: MutableList<Round>) {
         //fightViewModel.deleteAll()
-        viewModel.insertFights(fights)
+        viewModel.insertFights(rounds)
     }
 
     override fun databaseIsGood() {

@@ -13,30 +13,30 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.miklene.castlefight.R
 import com.miklene.castlefight.databinding.FragmentFightListBinding
-import com.miklene.castlefight.model.Fight
+import com.miklene.castlefight.model.Round
 import com.miklene.castlefight.mvvm.CheckUpdateViewModel
-import com.miklene.castlefight.mvvm.FightViewModel
+import com.miklene.castlefight.mvvm.RoundViewModel
 import com.miklene.castlefight.recycler_view.FightRecyclerAdapter
 import java.lang.Exception
 
 class FightListFragment() : Fragment(), CheckUpdateViewModel.DatabaseCheckUpdateCallback {
 
     private lateinit var binding: FragmentFightListBinding
-    private lateinit var viewModel: FightViewModel
+    private lateinit var viewModel: RoundViewModel
     private lateinit var checkUpdateViewModel: CheckUpdateViewModel
-    private var fightList: List<Fight> = listOf()
+    private var roundList: List<Round> = listOf()
 
-    private fun setFightList(_fightList: List<Fight>) {
-        fightList = _fightList
-        binding.list.adapter = FightRecyclerAdapter(fightList)
+    private fun setFightList(_roundList: List<Round>) {
+        roundList = _roundList
+        binding.list.adapter = FightRecyclerAdapter(roundList)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = activity?.run {
-            ViewModelProviders.of(this)[FightViewModel::class.java]
+            ViewModelProviders.of(this)[RoundViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
-        viewModel.getAllFights().observe(this, Observer<List<Fight>>() {
+        viewModel.getAllFights().observe(this, Observer<List<Round>>() {
             it?.let {
                 setFightList(it)
             }
@@ -57,7 +57,7 @@ class FightListFragment() : Fragment(), CheckUpdateViewModel.DatabaseCheckUpdate
         val view = binding.root
         val context = view.context
         binding.list.layoutManager = LinearLayoutManager(activity)
-        binding.list.adapter = FightRecyclerAdapter(fightList)
+        binding.list.adapter = FightRecyclerAdapter(roundList)
         //binding.list.adapter = FightRecyclerAdapter(fightList)
         return view
     }

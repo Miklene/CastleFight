@@ -5,15 +5,10 @@ import android.util.Log
 import androidx.annotation.NonNull
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.viewModelScope
-import com.miklene.castlefight.model.Fight
 import com.miklene.castlefight.model.Player
-import com.miklene.castlefight.repositories.FightRepository
 import com.miklene.castlefight.repositories.PlayerRepository
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.lang.NullPointerException
 

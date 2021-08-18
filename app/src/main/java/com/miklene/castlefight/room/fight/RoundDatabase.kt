@@ -4,22 +4,22 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.miklene.castlefight.model.Fight
+import com.miklene.castlefight.model.Round
 import com.miklene.castlefight.model.Player
 import com.miklene.castlefight.model.Race
 
-@Database(entities = [Fight::class, Player::class, Race::class], version = 1)
-abstract class FightDatabase : RoomDatabase() {
-    abstract fun fightDao(): FightDao
+@Database(entities = [Round::class, Player::class, Race::class], version = 1)
+abstract class RoundDatabase : RoomDatabase() {
+    abstract fun fightDao(): RoundDao
 
     companion object {
-        var INSTANCE: FightDatabase? = null
-        fun getFightDatabase(context: Context): FightDatabase? {
+        var INSTANCE: RoundDatabase? = null
+        fun getFightDatabase(context: Context): RoundDatabase? {
             if (INSTANCE == null) {
-                synchronized(FightDatabase::class) {
+                synchronized(RoundDatabase::class) {
                     INSTANCE = Room.databaseBuilder(
                         context.applicationContext,
-                        FightDatabase::class.java,
+                        RoundDatabase::class.java,
                         "FightDatabase"
                     ).build()
                 }

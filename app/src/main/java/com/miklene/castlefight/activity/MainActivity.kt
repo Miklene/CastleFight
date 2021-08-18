@@ -9,10 +9,9 @@ import com.miklene.castlefight.databinding.ActivityMainBinding
 import com.miklene.castlefight.fragments.FightListFragment
 import com.miklene.castlefight.fragments.PlayerListFragment
 import com.miklene.castlefight.fragments.RaceListFragment
-import com.miklene.castlefight.mvvm.FightViewModel
+import com.miklene.castlefight.mvvm.RoundViewModel
 import com.miklene.castlefight.room.player.PlayerDao
 import com.miklene.castlefight.room.player.PlayerDatabase
-import java.io.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -21,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     private var dao: PlayerDao? = null
     private lateinit var toolbar: ActionBar
 
-    private lateinit var fightViewModel: FightViewModel
+    private lateinit var roundViewModel: RoundViewModel
     //  private val host by lazy { NavHostFragment.create(R.navigation.nav_graph) }
 
     private val playerFragment = PlayerListFragment()

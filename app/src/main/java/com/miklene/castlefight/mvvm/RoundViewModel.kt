@@ -6,24 +6,22 @@ import androidx.annotation.NonNull
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.miklene.castlefight.model.Fight
-import com.miklene.castlefight.model.Player
-import com.miklene.castlefight.repositories.FightRepository
+import com.miklene.castlefight.model.Round
+import com.miklene.castlefight.repositories.RoundRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.lang.NullPointerException
 
-class FightViewModel(@NonNull application: Application) : AndroidViewModel(application) {
-    private val fightRepository: FightRepository
+class RoundViewModel(@NonNull application: Application) : AndroidViewModel(application) {
+    private val roundRepository: RoundRepository
     private lateinit var callback: FightCallback
-    private lateinit var fightLiveData: LiveData<List<Fight>>
+    private lateinit var roundLiveData: LiveData<List<Round>>
 
     init {
-        fightRepository = FightRepository(application)
+        roundRepository = RoundRepository(application)
         viewModelScope.launch {
-            fightLiveData = fightRepository.getAllFights()
+            roundLiveData = roundRepository.getAllRounds()
         }
     }
 
@@ -32,19 +30,19 @@ class FightViewModel(@NonNull application: Application) : AndroidViewModel(appli
     }
 
     interface FightCallback {
-        suspend fun updatePlayerWinsStat(wins: List<Fight>, loses:List<Fight>, loserName: String)
-        suspend fun updateRaceWinStat(wins: List<Fight>, loses:List<Fight>, loserName: String)
-        suspend fun updatePlayersRaceStat(wins: List<Fight>, loses:List<Fight>, raceName: String)
+        suspend fun updatePlayerWinsStat(wins: List<Round>, loses:List<Round>, loserName: String)
+        suspend fun updateRaceWinStat(wins: List<Round>, loses:List<Round>, loserName: String)
+        suspend fun updatePlayersRaceStat(wins: List<Round>, loses:List<Round>, raceName: String)
     }
 
-    fun getAllFights(): LiveData<List<Fight>> {
-        return fightLiveData
+    fun getAllFights(): LiveData<List<Round>> {
+        return roundLiveData
     }
 
     fun getPlayerWinsAndLosesUnderAnotherPlayer(winnerName: String, loserName: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val wins = fightRepository.getPlayerWinsUnderAnotherPlayer(winnerName,loserName)
-            val loses = fightRepository.getPlayerWinsUnderAnotherPlayer(loserName,winnerName)
+            val wins = roundRepository.getPlayerWinsUnderAnotherPlayer(winnerName,loserName)
+            val loses = roundRepository.getPlayerWinsUnderAnotherPlayer(loserName,winnerName)
             try {
                 callback.updatePlayerWinsStat(wins, loses, loserName)
             } catch (e: NullPointerException){
@@ -56,8 +54,8 @@ class FightViewModel(@NonNull application: Application) : AndroidViewModel(appli
 
     fun getRaceWinsAndLosesUnderAnotherRace(winnerName: String, loserName: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val wins = fightRepository.getRaceWinsUnderAnotherRace(winnerName,loserName)
-            val loses = fightRepository.getRaceWinsUnderAnotherRace(loserName,winnerName)
+            val wins = roundRepository.getRaceWinsUnderAnotherRace(winnerName,loserName)
+            val loses = roundRepository.getRaceWinsUnderAnotherRace(loserName,winnerName)
             try {
                 callback.updateRaceWinStat(wins, loses, loserName)
             } catch (e: NullPointerException){
@@ -68,8 +66,8 @@ class FightViewModel(@NonNull application: Application) : AndroidViewModel(appli
 
     fun getPlayerRaceWinsAndLoses(raceName: String, playerName: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val wins = fightRepository.getPlayerRaceWins(raceName,playerName)
-            val loses = fightRepository.getPlayerRaceLoses(raceName,playerName)
+            val wins = roundRepository.getPlayerRaceWins(raceName,playerName)
+            val loses = roundRepository.getPlayerRaceLoses(raceName,playerName)
             try {
                 callback.updatePlayersRaceStat(wins, loses, raceName)
             } catch (e: NullPointerException){
@@ -78,21 +76,21 @@ class FightViewModel(@NonNull application: Application) : AndroidViewModel(appli
         }
     }
 
-    fun insertFight(fight: Fight) {
+    fun insertFight(round: Round) {
         CoroutineScope(Dispatchers.IO).launch {
-            fightRepository.insert(fight)
+            roundRepository.insert(round)
         }
     }
 
-    fun deleteFight(fight: Fight) {
+    fun deleteFight(round: Round) {
         CoroutineScope(Dispatchers.IO).launch {
-            fightRepository.deleteFight(fight)
+            roundRepository.deleteRound(round)
         }
     }
 
     fun deleteAll() {
         CoroutineScope(Dispatchers.IO).launch {
-            fightRepository.deleteAll()
+            roundRepository.deleteAll()
         }
     }
 

@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 class AddFightViewModel(@NonNull application: Application) : AndroidViewModel(application) {
     private val playerRepsitory: PlayerRepository
     private val raceRepository: RaceRepository
-    private val fightRepository: FightRepository
+    private val roundRepository: RoundRepository
     private val playerVsPlayerStatisticsRepository: PlayerVsPlayerStatisticsRepository
     private val raceVsRaceStatisticsRepository: RaceVsRaceStatisticsRepository
     private val playerStatisticsByRaceRepository: PlayerStatisticsByRaceRepository
@@ -34,7 +34,7 @@ class AddFightViewModel(@NonNull application: Application) : AndroidViewModel(ap
     init {
         playerRepsitory = PlayerRepository(application)
         raceRepository = RaceRepository(application)
-        fightRepository = FightRepository(application)
+        roundRepository = RoundRepository(application)
         playerVsPlayerStatisticsRepository = PlayerVsPlayerStatisticsRepository(application)
         raceVsRaceStatisticsRepository = RaceVsRaceStatisticsRepository(application)
         playerStatisticsByRaceRepository = PlayerStatisticsByRaceRepository(application)
@@ -51,14 +51,14 @@ class AddFightViewModel(@NonNull application: Application) : AndroidViewModel(ap
     fun getAllRaces(): LiveData<List<Race>> {
         return raceLiveData;
     }
-    fun insertFights(fights: List<Fight>) {
+    fun insertFights(rounds: List<Round>) {
         CoroutineScope(Dispatchers.IO).launch {
-            for(fight in fights) {
-                fightRepository.insert(fight)
-                val playerWins = fightRepository.getPlayerWins(fight.winner).size
-                val playerLoses = fightRepository.getPlayerLoses(fight.loser).size
-                val raceWins = fightRepository.getRaceWins(fight.winnerRace).size
-                val raceLoses = fightRepository.getRaceLoses(fight.loserRace).size
+            for(fight in rounds) {
+                roundRepository.insert(fight)
+                val playerWins = roundRepository.getPlayerWins(fight.winner).size
+                val playerLoses = roundRepository.getPlayerLoses(fight.loser).size
+                val raceWins = roundRepository.getRaceWins(fight.winnerRace).size
+                val raceLoses = roundRepository.getRaceLoses(fight.loserRace).size
                 playerRepsitory.updatePlayerWins(fight.winner, playerWins)
                 playerRepsitory.updatePlayerLoses(fight.loser, playerLoses)
                 raceRepository.updateRaceWins(fight.winnerRace, raceWins)
@@ -71,20 +71,20 @@ class AddFightViewModel(@NonNull application: Application) : AndroidViewModel(ap
         }
     }
 
-    fun insertFight(fight: Fight) {
+    fun insertFight(round: Round) {
         CoroutineScope(Dispatchers.IO).launch {
-            fightRepository.insert(fight)
-            val playerWins = fightRepository.getPlayerWins(fight.winner).size
-            val playerLoses = fightRepository.getPlayerLoses(fight.loser).size
-            val raceWins = fightRepository.getRaceWins(fight.winnerRace).size
-            val raceLoses = fightRepository.getRaceLoses(fight.loserRace).size
-            playerRepsitory.updatePlayerWins(fight.winner, playerWins)
-            playerRepsitory.updatePlayerLoses(fight.loser, playerLoses)
-            raceRepository.updateRaceWins(fight.winnerRace, raceWins)
-            raceRepository.updateRaceLoses(fight.loserRace, raceLoses)
-            updatePlVsPlDatabase(fight.winner, fight.loser)
-            updateRaceVsRaceDatabase(fight.winnerRace, fight.loserRace)
-            updatePlayerStatisticsByRace(fight)
+            roundRepository.insert(round)
+            val playerWins = roundRepository.getPlayerWins(round.winner).size
+            val playerLoses = roundRepository.getPlayerLoses(round.loser).size
+            val raceWins = roundRepository.getRaceWins(round.winnerRace).size
+            val raceLoses = roundRepository.getRaceLoses(round.loserRace).size
+            playerRepsitory.updatePlayerWins(round.winner, playerWins)
+            playerRepsitory.updatePlayerLoses(round.loser, playerLoses)
+            raceRepository.updateRaceWins(round.winnerRace, raceWins)
+            raceRepository.updateRaceLoses(round.loserRace, raceLoses)
+            updatePlVsPlDatabase(round.winner, round.loser)
+            updateRaceVsRaceDatabase(round.winnerRace, round.loserRace)
+            updatePlayerStatisticsByRace(round)
         }
     }
 
@@ -132,29 +132,29 @@ class AddFightViewModel(@NonNull application: Application) : AndroidViewModel(ap
         }
     }
 
-    private fun updatePlayerStatisticsByRace(fight: Fight) {
+    private fun updatePlayerStatisticsByRace(round: Round) {
         if (playerStatisticsByRaceRepository
-                .getByPlayerAndRaceNames(fight.winner, fight.winnerRace) == null
+                .getByPlayerAndRaceNames(round.winner, round.winnerRace) == null
         ) {
             playerStatisticsByRaceRepository.insert(
-                PlayerStatisticsByRace(0, fight.winner, fight.winnerRace, 0, 0)
+                PlayerStatisticsByRace(0, round.winner, round.winnerRace, 0, 0)
             )
         }
         val pSBRWinner =
-            playerStatisticsByRaceRepository.getByPlayerAndRaceNames(fight.winner, fight.winnerRace)
+            playerStatisticsByRaceRepository.getByPlayerAndRaceNames(round.winner, round.winnerRace)
         pSBRWinner.wins++
         playerStatisticsByRaceRepository.updateStatistics(pSBRWinner)
         if (playerStatisticsByRaceRepository.getByPlayerAndRaceNames(
-                fight.loser,
-                fight.loserRace
+                round.loser,
+                round.loserRace
             ) == null
         ) {
             playerStatisticsByRaceRepository.insert(
-                PlayerStatisticsByRace(0, fight.loser, fight.loserRace, 0, 0)
+                PlayerStatisticsByRace(0, round.loser, round.loserRace, 0, 0)
             )
         }
         val pSBRLoser =
-            playerStatisticsByRaceRepository.getByPlayerAndRaceNames(fight.loser, fight.loserRace)
+            playerStatisticsByRaceRepository.getByPlayerAndRaceNames(round.loser, round.loserRace)
         pSBRLoser.loses++
         playerStatisticsByRaceRepository.updateStatistics(pSBRLoser)
     }

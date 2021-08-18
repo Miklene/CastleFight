@@ -17,18 +17,16 @@ import com.miklene.castlefight.databinding.FragmentStatisticsBinding
 import com.miklene.castlefight.model.*
 import com.miklene.castlefight.mvvm.*
 import com.miklene.castlefight.recycler_view.StatisticsRecyclerAdapter
-import kotlinx.coroutines.launch
 import java.lang.Exception
-import kotlin.math.E
 
-class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
+class StatisticsFragment : Fragment(), RoundViewModel.FightCallback,
     PlayerVsPlayerStatisticsViewModel.PlayerVsPlayerStatisticsCallback,
     RaceVsRaceStatisticsViewModel.RaceVsRaceStatisticsCallback,
     PlayerStatisticsByRaceViewModel.PlayerStatisticsByRaceCallback,
     StatisticsRecyclerAdapter.OnStatisticsItemClickListener {
     private lateinit var binding: FragmentStatisticsBinding
     private lateinit var playerViewModel: PlayerViewModel
-    private lateinit var fightViewModel: FightViewModel
+    private lateinit var roundViewModel: RoundViewModel
     private lateinit var raceViewModel: RaceViewModel
     private lateinit var playerVsPlayerStatisticsViewModel: PlayerVsPlayerStatisticsViewModel
     private lateinit var raceVsRaceStatisticsViewModel: RaceVsRaceStatisticsViewModel
@@ -36,7 +34,7 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
     private var stat: MutableList<Statistics> = mutableListOf()
     private var secondStat: MutableList<Statistics> = mutableListOf()
     private var isSecondStat: Boolean = false
-    private lateinit var fightList: List<Fight>
+    private lateinit var roundList: List<Round>
     private var playerList: List<Player> = listOf()
     private var raceList: List<Race> = listOf()
     private var playerName: String? = null
@@ -71,8 +69,8 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
     }
 
     fun initViewModels() {
-        fightViewModel = activity?.run {
-            ViewModelProviders.of(this)[FightViewModel::class.java]
+        roundViewModel = activity?.run {
+            ViewModelProviders.of(this)[RoundViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
         /*fightViewModel.getAllFights().observe(this, Observer<List<Fight>>() {
             it?.let {
@@ -113,8 +111,8 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
         binding.list.adapter = StatisticsRecyclerAdapter(stat,this)
     }*/
 
-    private fun setFightList(_fightList: List<Fight>) {
-        fightList = _fightList
+    private fun setFightList(_roundList: List<Round>) {
+        roundList = _roundList
     }
 
     private fun setPlayerList(_playerList: List<Player>) {
@@ -143,7 +141,7 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
         for (player in playerList) {
             if (player.name != playerName)
                 playerName?.let {
-                    fightViewModel.getPlayerWinsAndLosesUnderAnotherPlayer(
+                    roundViewModel.getPlayerWinsAndLosesUnderAnotherPlayer(
                         it,
                         player.name
                     )
@@ -155,7 +153,7 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
         for (race in raceList) {
             if (race.name != raceName)
                 raceName?.let {
-                    fightViewModel.getRaceWinsAndLosesUnderAnotherRace(
+                    roundViewModel.getRaceWinsAndLosesUnderAnotherRace(
                         it,
                         race.name
                     )
@@ -167,7 +165,7 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
         secondStat.clear()
         for (race in raceList) {
             playerName?.let {
-                fightViewModel.getPlayerRaceWinsAndLoses(
+                roundViewModel.getPlayerRaceWinsAndLoses(
                     race.name,
                     it
                 )
@@ -183,7 +181,7 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
         binding = FragmentStatisticsBinding.inflate(inflater, container, false)
         val view = binding.root
         binding.list.layoutManager = LinearLayoutManager(activity)
-        fightViewModel.attachPlayerCallBack(this)
+        roundViewModel.attachPlayerCallBack(this)
         if (raceName != null)
             binding.tvStatisticsName.text = "Расы"
         if (playerName != null)
@@ -236,8 +234,8 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
     }
 
     override suspend fun updatePlayerWinsStat(
-        wins: List<Fight>,
-        loses: List<Fight>,
+        wins: List<Round>,
+        loses: List<Round>,
         loserName: String
     ) {
         val fights = wins.size + loses.size
@@ -249,8 +247,8 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
     }
 
     override suspend fun updateRaceWinStat(
-        wins: List<Fight>,
-        loses: List<Fight>,
+        wins: List<Round>,
+        loses: List<Round>,
         loserName: String
     ) {
         val fights = wins.size + loses.size
@@ -262,8 +260,8 @@ class StatisticsFragment : Fragment(), FightViewModel.FightCallback,
     }
 
     override suspend fun updatePlayersRaceStat(
-        wins: List<Fight>,
-        loses: List<Fight>,
+        wins: List<Round>,
+        loses: List<Round>,
         raceName: String
     ) {
         val fights = wins.size + loses.size

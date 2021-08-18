@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 import androidx.annotation.NonNull
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.miklene.castlefight.model.Fight
+import com.miklene.castlefight.model.Round
 import com.miklene.castlefight.repositories.VersionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,7 +27,7 @@ class UpdateDatabaseViewModel(@NonNull application: Application) : AndroidViewMo
     }
 
     interface DatabaseUpdateCallback {
-        fun databaseLoadingComplete(fights: MutableList<Fight>)
+        fun databaseLoadingComplete(rounds: MutableList<Round>)
         fun databaseIsGood()
         fun cantFindDatabase()
     }
@@ -67,7 +67,7 @@ class UpdateDatabaseViewModel(@NonNull application: Application) : AndroidViewMo
     }
 
     private fun getFightsFromStringDatabase(database: java.lang.StringBuilder) {
-        var fights: MutableList<Fight> = mutableListOf()
+        var rounds: MutableList<Round> = mutableListOf()
         var position: Int = 0
         var myVersion = versionRepository.loadVersion()
         var winnerName: String
@@ -97,9 +97,9 @@ class UpdateDatabaseViewModel(@NonNull application: Application) : AndroidViewMo
                 end = database.indexOf(";")
                 loserRace = database.substring(position, end)
                 database.delete(position, end + 1)
-                fights.add(Fight(0, winnerName, loserName, winnerRace, loserRace))
+                rounds.add(Round(0, winnerName, loserName, winnerRace, loserRace))
             }
-            callback.databaseLoadingComplete(fights)
+            callback.databaseLoadingComplete(rounds)
             return
         }
         callback.databaseIsGood()

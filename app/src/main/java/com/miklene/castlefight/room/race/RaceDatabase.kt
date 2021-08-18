@@ -5,14 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.miklene.castlefight.model.Player
 
 import com.miklene.castlefight.model.Race
-import com.miklene.castlefight.room.fight.FightDao
-import com.miklene.castlefight.room.fight.FightDatabase
-import com.miklene.castlefight.room.player.PlayerDatabase
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
