@@ -2,6 +2,7 @@ package com.miklene.castlefight.fragments
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.ArrayAdapter
@@ -21,6 +22,7 @@ class AddFightDialogFragment : DialogFragment() {
     private lateinit var binding: DialogFragmentAddFightBinding
     private lateinit var viewModel: AddFightViewModel
     private var playerList: List<Player> = listOf()
+
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 

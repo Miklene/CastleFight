@@ -20,6 +20,16 @@ class AddFightViewModel(@NonNull application: Application) : AndroidViewModel(ap
     private val playerStatisticsByRaceRepository: PlayerStatisticsByRaceRepository
     private lateinit var playerLiveData: LiveData<List<Player>>
     private lateinit var raceLiveData: LiveData<List<Race>>
+    private lateinit var callback: AddFightViewModelCallback
+
+
+    interface AddFightViewModelCallback{
+        fun insetComplete()
+    }
+
+    fun attachCallback(addFightViewModelCallback: AddFightViewModelCallback){
+        callback = addFightViewModelCallback
+    }
 
     init {
         playerRepsitory = PlayerRepository(application)
@@ -40,6 +50,25 @@ class AddFightViewModel(@NonNull application: Application) : AndroidViewModel(ap
 
     fun getAllRaces(): LiveData<List<Race>> {
         return raceLiveData;
+    }
+    fun insertFights(fights: List<Fight>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            for(fight in fights) {
+                fightRepository.insert(fight)
+                val playerWins = fightRepository.getPlayerWins(fight.winner).size
+                val playerLoses = fightRepository.getPlayerLoses(fight.loser).size
+                val raceWins = fightRepository.getRaceWins(fight.winnerRace).size
+                val raceLoses = fightRepository.getRaceLoses(fight.loserRace).size
+                playerRepsitory.updatePlayerWins(fight.winner, playerWins)
+                playerRepsitory.updatePlayerLoses(fight.loser, playerLoses)
+                raceRepository.updateRaceWins(fight.winnerRace, raceWins)
+                raceRepository.updateRaceLoses(fight.loserRace, raceLoses)
+                updatePlVsPlDatabase(fight.winner, fight.loser)
+                updateRaceVsRaceDatabase(fight.winnerRace, fight.loserRace)
+                updatePlayerStatisticsByRace(fight)
+            }
+            callback.insetComplete()
+        }
     }
 
     fun insertFight(fight: Fight) {

@@ -33,7 +33,7 @@ abstract class PlayerDatabase : RoomDatabase() {
                                 val dao = INSTANCE?.playerDao()
                                CoroutineScope(Dispatchers.IO).launch {
                                     val players: Array<String> =
-                                        arrayOf("Антон", "Витя", "Даня", "Миша", "Никита")
+                                        arrayOf("Антон", "Витя", "Даня", "Миша", "Никита", "Кирюха")
                                     for (player in players)
                                         dao?.insert(Player(player))
                                 }

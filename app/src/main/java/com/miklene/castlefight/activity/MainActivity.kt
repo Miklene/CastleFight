@@ -1,39 +1,28 @@
 package com.miklene.castlefight.activity
 
-import android.content.res.Resources
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import androidx.appcompat.app.ActionBar
-import androidx.fragment.app.DialogFragment
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.miklene.castlefight.R
 import com.miklene.castlefight.databinding.ActivityMainBinding
-import com.miklene.castlefight.fragments.AddFightDialogFragment
 import com.miklene.castlefight.fragments.FightListFragment
 import com.miklene.castlefight.fragments.PlayerListFragment
 import com.miklene.castlefight.fragments.RaceListFragment
 import com.miklene.castlefight.mvvm.FightViewModel
-import com.miklene.castlefight.room.fight.FightDao
-import com.miklene.castlefight.room.fight.FightDatabase
 import com.miklene.castlefight.room.player.PlayerDao
 import com.miklene.castlefight.room.player.PlayerDatabase
+import java.io.*
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var db: PlayerDatabase? = null
     private var dao: PlayerDao? = null
-    private lateinit var toolbar:ActionBar
+    private lateinit var toolbar: ActionBar
 
     private lateinit var fightViewModel: FightViewModel
-  //  private val host by lazy { NavHostFragment.create(R.navigation.nav_graph) }
+    //  private val host by lazy { NavHostFragment.create(R.navigation.nav_graph) }
 
     private val playerFragment = PlayerListFragment()
     private val fightFragment = FightListFragment()
@@ -43,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-       // fightViewModel = ViewModelProvider(this).get(FightViewModel::class.java)
+        // fightViewModel = ViewModelProvider(this).get(FightViewModel::class.java)
         /*supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_container_view_tag, FightListFragment())
@@ -51,19 +40,20 @@ class MainActivity : AppCompatActivity() {
             .commit()*/
 
         //db = PlayerDatabase.getPlayerDatabase(this)
-       // dao = db?.playerDao()
+        // dao = db?.playerDao()
         /*val navController = findNavController(R.id.fragment_container)
         binding.navigationView.setupWithNavController(navController)*/
         makeCurrentFragment(fightFragment)
         binding.navigationView.selectedItemId = R.id.navigation_fights
         binding.navigationView.setOnItemSelectedListener { item ->
-            when(item.itemId){
+            when (item.itemId) {
                 R.id.navigation_races -> makeCurrentFragment(raceFragment)
                 R.id.navigation_fights -> makeCurrentFragment(fightFragment)
                 R.id.navigation_players -> makeCurrentFragment(playerFragment)
             }
             true
         }
+
         /*navController.addOnDestinationChangedListener { _, destination, _ ->
             val dest: String = try {
                 resources.getResourceName(destination.id)
@@ -94,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         //fightDao?.delete(fight1)
     }
 
-    private fun makeCurrentFragment(fragment: Fragment){
+    private fun makeCurrentFragment(fragment: Fragment) {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_container, fragment)

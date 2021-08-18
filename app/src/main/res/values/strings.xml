@@ -26,4 +26,9 @@
     <string name="win_rate">WR</string>
 
     <string name="stat_playing_races">Статистика боев за расы</string>
+
+    <string name="check_update">Проверка наличия обновлений</string>
+
+    <string name="cant_find_database">Файл базы не найден</string>
+    <string name="you_have_current_version_database">У вас актуальная версия базы данных</string>
 </resources>

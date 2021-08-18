@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_alignParentTop="true">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/header"
@@ -51,7 +56,7 @@
                 android:text="@string/loses" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
+    
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
         android:name="com.miklene.castlefight.ItemFragment"
@@ -59,4 +64,6 @@
         android:layout_height="match_parent"
         app:layoutManager="LinearLayoutManager"
         tools:listitem="@layout/player_list_item" />
+
 </LinearLayout>
+</RelativeLayout>
