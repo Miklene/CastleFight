@@ -31,4 +31,7 @@
 
     <string name="cant_find_database">Файл базы не найден</string>
     <string name="you_have_current_version_database">У вас актуальная версия базы данных</string>
+
+    <string name="bans">Баны</string>
+    <string name="rounds">Раунды</string>
 </resources>

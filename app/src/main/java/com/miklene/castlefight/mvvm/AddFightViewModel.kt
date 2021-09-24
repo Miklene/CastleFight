@@ -15,6 +15,7 @@ class AddFightViewModel(@NonNull application: Application) : AndroidViewModel(ap
     private val playerRepsitory: PlayerRepository
     private val raceRepository: RaceRepository
     private val roundRepository: RoundRepository
+    private val fightRepository: FightRepository
     private val playerVsPlayerStatisticsRepository: PlayerVsPlayerStatisticsRepository
     private val raceVsRaceStatisticsRepository: RaceVsRaceStatisticsRepository
     private val playerStatisticsByRaceRepository: PlayerStatisticsByRaceRepository
@@ -23,11 +24,11 @@ class AddFightViewModel(@NonNull application: Application) : AndroidViewModel(ap
     private lateinit var callback: AddFightViewModelCallback
 
 
-    interface AddFightViewModelCallback{
+    interface AddFightViewModelCallback {
         fun insetComplete()
     }
 
-    fun attachCallback(addFightViewModelCallback: AddFightViewModelCallback){
+    fun attachCallback(addFightViewModelCallback: AddFightViewModelCallback) {
         callback = addFightViewModelCallback
     }
 
@@ -35,6 +36,7 @@ class AddFightViewModel(@NonNull application: Application) : AndroidViewModel(ap
         playerRepsitory = PlayerRepository(application)
         raceRepository = RaceRepository(application)
         roundRepository = RoundRepository(application)
+        fightRepository = FightRepository(application)
         playerVsPlayerStatisticsRepository = PlayerVsPlayerStatisticsRepository(application)
         raceVsRaceStatisticsRepository = RaceVsRaceStatisticsRepository(application)
         playerStatisticsByRaceRepository = PlayerStatisticsByRaceRepository(application)
@@ -51,9 +53,10 @@ class AddFightViewModel(@NonNull application: Application) : AndroidViewModel(ap
     fun getAllRaces(): LiveData<List<Race>> {
         return raceLiveData;
     }
+
     fun insertFights(rounds: List<Round>) {
         CoroutineScope(Dispatchers.IO).launch {
-            for(fight in rounds) {
+            for (fight in rounds) {
                 roundRepository.insert(fight)
                 val playerWins = roundRepository.getPlayerWins(fight.winner).size
                 val playerLoses = roundRepository.getPlayerLoses(fight.loser).size
@@ -71,7 +74,14 @@ class AddFightViewModel(@NonNull application: Application) : AndroidViewModel(ap
         }
     }
 
-    fun insertFight(round: Round) {
+    fun insertFight(fight: Fight) {
+        viewModelScope.launch(Dispatchers.IO) {
+            var fightId = fightRepository.insert(fight)
+        }
+
+    }
+
+    fun insertRound(round: Round) {
         CoroutineScope(Dispatchers.IO).launch {
             roundRepository.insert(round)
             val playerWins = roundRepository.getPlayerWins(round.winner).size
@@ -85,6 +95,12 @@ class AddFightViewModel(@NonNull application: Application) : AndroidViewModel(ap
             updatePlVsPlDatabase(round.winner, round.loser)
             updateRaceVsRaceDatabase(round.winnerRace, round.loserRace)
             updatePlayerStatisticsByRace(round)
+        }
+    }
+
+    fun getFight() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val list = fightRepository.getFight()
         }
     }
 

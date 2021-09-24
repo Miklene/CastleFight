@@ -1,4 +1,4 @@
-package com.miklene.castlefight.room.fight
+package com.miklene.castlefight.room.round
 
 import androidx.lifecycle.LiveData
 import androidx.room.*

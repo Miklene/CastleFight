@@ -3,8 +3,8 @@ package com.miklene.castlefight.repositories
 import android.app.Application
 import androidx.lifecycle.LiveData
 import com.miklene.castlefight.model.Round
-import com.miklene.castlefight.room.fight.RoundDao
-import com.miklene.castlefight.room.fight.RoundDatabase
+import com.miklene.castlefight.room.round.RoundDao
+import com.miklene.castlefight.room.round.RoundDatabase
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 

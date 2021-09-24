@@ -97,7 +97,7 @@ class UpdateDatabaseViewModel(@NonNull application: Application) : AndroidViewMo
                 end = database.indexOf(";")
                 loserRace = database.substring(position, end)
                 database.delete(position, end + 1)
-                rounds.add(Round(0, winnerName, loserName, winnerRace, loserRace))
+                rounds.add(Round(0, 0,winnerName, loserName, winnerRace, loserRace))
             }
             callback.databaseLoadingComplete(rounds)
             return

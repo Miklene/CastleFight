@@ -26,7 +26,8 @@ import androidx.room.PrimaryKey
 
 data class Round(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: Long,
+    val roundFightId: Long,
     val winner: String,
     val loser: String,
     val winnerRace: String,
